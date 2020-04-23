@@ -1,0 +1,7 @@
+﻿  Allopencv.cpp
+  main.cpp
+  Socket.cpp
+  코드를 생성하고 있습니다...
+Socket.obj : error LNK2005: "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > img_str" (?img_str@@3V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@A)이(가) Allopencv.obj에 이미 정의되어 있습니다.
+Socket.obj : error LNK2005: "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > img_str2" (?img_str2@@3V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@A)이(가) Allopencv.obj에 이미 정의되어 있습니다.
+opencv_world420d.lib(opencv_world420d.dll) : fatal error LNK1112: 'x64' 모듈 컴퓨터 종류가 'x86' 대상 컴퓨터 종류와 충돌합니다.
