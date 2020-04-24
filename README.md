@@ -102,7 +102,8 @@ void mouse_callback(int event, int x, int y, int flags, void *userdata) {
 
 }
 ```
-여기서 마우스 눌렀을 때 startx와 starty가 저장되며 마우스를 올렸을 때 endx와 endy가 저장됩니다. 그리고 imwrite를 통해 startroi+ 눌린 횟수 의 이름으로 이미지 jpg 파일로 저장하게 됩니다.  
+여기서 마우스 눌렀을 때 startx와 starty가 저장되며 마우스를 올렸을 때 endx와 endy가 저장됩니다. 그리고 imwrite를 통해 startroi+ 눌린 횟수 의 이름으로 이미지 jpg 파일로 저장하게 됩니다.  실행 화면 입니다.
+![ROI](https://user-images.githubusercontent.com/60215726/80211852-6872c580-8671-11ea-944d-c3133e323cfe.png)
 
 이후 첫이미지에서 추출된 End_Roi에서 사용하기 위해 좌표를 저장을 하기 위해 location 함수를 이용했습니다. 
 ```cpp
@@ -150,6 +151,50 @@ void Allopencv::End_RoiImg(string img_str) {
 	destroyAllWindows();
 }
 ```
+![EndROI](https://user-images.githubusercontent.com/60215726/80211855-69a3f280-8671-11ea-8db2-929f2ee4678b.png)
+
+ ![save](https://user-images.githubusercontent.com/60215726/80212260-1ed6aa80-8672-11ea-9bc9-3d5437251167.PNG)   
+ EndRoi 실행 화면이며 아래와 같이 Endroi를 저장한 후 폴더에 저장된 이미지입니다. startroi는 ROI 함수에서 시작할 때 저장됩니다.    
+    
+###### (2) Histogram
+히스토그램을 사용하는 함수로 아이가 탐지가 되었는지를 구별하기 위해 사용하였습니다.   
+처음 이미지와 비교할 이미지의 각각의 calcHist 명령어를 통해 히스토그램을 계산을 하고 CompareHist 명령어를 통하여 비교한 수치 값과 기준점을 비교하여 아이가 탐지 여부를 파악하였습니다.   
+```cpp
+void Allopencv::Histogram() {
+	Mat srcImage[2];
+	for (int count = 0; count < i; count++) {
+		//for문을 이용한 것은 좌표매핑한 횟수만큼 자동으로 실행하고 
+		//비교를 하기 위해 사용하였습니다. 
+		srcImage[0] = imread("startroi" + to_string(count + 1) + ".jpg", IMREAD_GRAYSCALE);
+		srcImage[1] = imread("Endroi" + to_string(count + 1) + ".jpg", IMREAD_GRAYSCALE);
+
+		int histSize = 256;
+		float range[] = { 0,255 };
+		const float *ranges[] = { range };
+		Mat hist[2];
+		calcHist(&srcImage[0], 1, 0, Mat(), hist[0], 1, &histSize, ranges);
+		calcHist(&srcImage[1], 1, 0, Mat(), hist[1], 1, &histSize, ranges);
+		double dCorrel = compareHist(hist[0], hist[1], HISTCMP_CORREL);
+		double check_dC = dCorrel * 10;
+  //여기 부분은 dCorrel은 1이 나오게 되면 이미지가 같은 것임을 나타내고 
+  //낮으면 낮아질수록 유사도가 떨어지게 됩니다. 
+  //check_dc는 10*dCorrel로 7.0 이상이면 이미지끼리 많은 유사를 나타나기 때문에 no detech를 정의하였고
+  //7.0보다 낮게 되면 아이나 물건이 있다는 것을 하여 detech로 정의하였습니다. 
+		if (check_dC > 7.0) {
+			cout << "no detech" << check_dC << endl;
+		}
+		else if (check_dC <= 7.0) {
+			cout << "detech" << check_dC << endl;
+		}
+	}
+	waitKey(0);
+	destroyAllWindows();
+
+}
+```
+실행하게 되면 아래 이미지에서 Recv Msg: his의 아래 histogram 실행이 되며 결과를 나타냅니다. 
+![his](https://user-images.githubusercontent.com/60215726/80211856-6ad51f80-8671-11ea-9c4c-22abf169a003.png)
+
    
 ###### (3) Allopencv.cpp 전체 코드 
 ```cpp
@@ -329,43 +374,6 @@ void Allopencv::Histogram() {
 			cout << "detech" << check_dC << endl;
 		}
 		
-	}
-	waitKey(0);
-	destroyAllWindows();
-
-}
-```
-   
-###### (2) Histogram
-히스토그램을 사용하는 함수로 아이가 탐지가 되었는지를 구별하기 위해 사용하였습니다.   
-처음 이미지와 비교할 이미지의 각각의 calcHist 명령어를 통해 히스토그램을 계산을 하고 CompareHist 명령어를 통하여 비교한 수치 값과 기준점을 비교하여 아이가 탐지 여부를 파악하였습니다.   
-```cpp
-void Allopencv::Histogram() {
-	Mat srcImage[2];
-	for (int count = 0; count < i; count++) {
-		//for문을 이용한 것은 좌표매핑한 횟수만큼 자동으로 실행하고 
-		//비교를 하기 위해 사용하였습니다. 
-		srcImage[0] = imread("startroi" + to_string(count + 1) + ".jpg", IMREAD_GRAYSCALE);
-		srcImage[1] = imread("Endroi" + to_string(count + 1) + ".jpg", IMREAD_GRAYSCALE);
-
-		int histSize = 256;
-		float range[] = { 0,255 };
-		const float *ranges[] = { range };
-		Mat hist[2];
-		calcHist(&srcImage[0], 1, 0, Mat(), hist[0], 1, &histSize, ranges);
-		calcHist(&srcImage[1], 1, 0, Mat(), hist[1], 1, &histSize, ranges);
-		double dCorrel = compareHist(hist[0], hist[1], HISTCMP_CORREL);
-		double check_dC = dCorrel * 10;
-  //여기 부분은 dCorrel은 1이 나오게 되면 이미지가 같은 것임을 나타내고 
-  //낮으면 낮아질수록 유사도가 떨어지게 됩니다. 
-  //check_dc는 10*dCorrel로 7.0 이상이면 이미지끼리 많은 유사를 나타나기 때문에 no detech를 정의하였고
-  //7.0보다 낮게 되면 아이나 물건이 있다는 것을 하여 detech로 정의하였습니다. 
-		if (check_dC > 7.0) {
-			cout << "no detech" << check_dC << endl;
-		}
-		else if (check_dC <= 7.0) {
-			cout << "detech" << check_dC << endl;
-		}
 	}
 	waitKey(0);
 	destroyAllWindows();
@@ -574,5 +582,6 @@ int main()
 
 }
 ```
+
 자바 클라이언트 대신 여기서는 같은 C++로 클라이언트를 구성하였습니다. 
 (현재는 이미지를 보내는 소켓통신이 진행 중 입니다. 프로젝트에 적용이 되면 바로 업로드 할 예정입니다.)
