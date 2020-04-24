@@ -1,6 +1,6 @@
 ## whiteboxseverCpp   
-![시스템구성도(수정2)](https://user-images.githubusercontent.com/60215726/80072142-ca073700-8580-11ea-8667-8c79b89a1a78.png)
- 졸업작품을 주제로 한 whitebox(https://github.com/ChoJaeBok/whiteboxproject)에서 서버와 영상처리를 담당하는 부분에 대한 것을 python 버전에서 C++버전으로 다시 만든 것입니다. 또한 python을 진행하였을 당시에는 라즈베리파이 b3에서 진행하였지만 C++버전은 컴퓨터(윈도우)환경에서 진행하였습니다. 또한 클라이언트는 안드로이드가 아닌 같은 C++로 제작하여 진행하였습니다.    
+![시스템구성도(수정2)](https://user-images.githubusercontent.com/60215726/80072142-ca073700-8580-11ea-8667-8c79b89a1a78.png) 
+ 졸업작품을 주제로 한 whitebox(https://github.com/ChoJaeBok/whiteboxproject) 에서 서버와 영상처리를 담당하는 부분에 대한 것을 python 버전에서 C++버전으로 다시 만든 것입니다. 또한 python을 진행하였을 당시에는 라즈베리파이 b3에서 진행하였지만 C++버전은 컴퓨터(윈도우)환경에서 진행하였습니다. 또한 클라이언트는 안드로이드가 아닌 같은 C++로 제작하여 진행하였습니다.    
 기존에 만들었던 작품에서 진행하는 순서는 비슷하나 부족했던 부분들은 추가할 예정입니다.   
  
 
