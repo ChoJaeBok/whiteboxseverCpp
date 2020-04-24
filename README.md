@@ -374,7 +374,7 @@ void Allopencv::Histogram() {
 ```
    
 #### 1) socket에 대한 코드    
-
+##### (1) server
 ```cpp
 //Socket.h
 #ifndef SOCLET_H
@@ -489,4 +489,89 @@ void Socket::Run_socket() {
 	WSACleanup();//소켓을 활용하는것은 startup과 cleanup 사이에 작성. 생성자와 소멸자 같은 개념
 }
 ```
-이렇게 서버를 담당하는 부분입니다. 
+서버를 담당하는 부분입니다. 
+##### (2) client
+```cpp
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include<iostream>
+#include<WinSock2.h>
+#include<WS2tcpip.h>
+#pragma comment(lib, "ws2_32")
+#define PORT 8888
+#define PACKET_SIZE 1024
+#define SERVER_IP "IP이므로 가렸습니다"
+using namespace std;
+
+int main()
+{
+	int select_i = 0;
+
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+	
+	
+	
+	while (true) {
+		SOCKET hSocket;
+		hSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+		SOCKADDR_IN tAddr = {};
+		tAddr.sin_family = AF_INET;
+		tAddr.sin_port = htons(PORT);
+		tAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
+
+		connect(hSocket, (SOCKADDR*)&tAddr, sizeof(tAddr));
+		//connect(소켓, 소켓구성요소 구조체의 주소, 그 구조체의 크기);
+		//connect 함수는 지정된 소켓에 연결을 설정해준다. 서버에 연결하기위해 connect함수를 사용
+		cout << "숫자 지정:" << endl;
+
+		cin >> select_i;
+		char cMsg[] = "EndROI";
+		char cBuffer[PACKET_SIZE] = {};
+		if (select_i == 1) {
+			strcpy_s(cMsg, "ROI");
+			send(hSocket, cMsg, strlen(cMsg), 0);
+			recv(hSocket, cBuffer, PACKET_SIZE, 0);
+			cout << "Recv Msg:" << cBuffer<<endl;
+
+		}
+		else if (select_i == 2) {
+			cout << cMsg<< endl;
+			strcpy_s(cMsg, "EndROI");
+			send(hSocket, cMsg, strlen(cMsg), 0);
+			recv(hSocket, cBuffer, PACKET_SIZE, 0);
+			cout << "Recv Msg:" << cBuffer << endl;
+		}
+		else if (select_i == 3) {
+			strcpy_s(cMsg, "His");
+			send(hSocket, cMsg, strlen(cMsg), 0);
+			recv(hSocket, cBuffer, PACKET_SIZE, 0);
+			cout << "Recv Msg:" << cBuffer << endl;
+		}
+		else if (select_i == 4) {
+			strcpy_s(cMsg, "load");
+			send(hSocket, cMsg, strlen(cMsg), 0);
+			recv(hSocket, cBuffer, PACKET_SIZE, 0);
+			cout << "Recv Msg:" << cBuffer << endl;
+		}
+		else {
+			strcpy_s(cMsg, "break");
+			send(hSocket, cMsg, strlen(cMsg), 0);
+			recv(hSocket, cBuffer, PACKET_SIZE, 0);
+			cout << "Recv Msg:" << cBuffer << endl;
+			break;
+		}
+		cout << select_i << endl;
+		closesocket(hSocket);
+	}
+
+
+	
+	//클라이언트측 코드, 소켓 구성요소 구조체에 접속할 서버의 ip를 적어준다. 클라이언트에서는 bind함수 대신 connect함수를 사용
+	WSACleanup();
+	return 0;
+
+}
+```
+자바 클라이언트 대신 여기서는 같은 C++로 클라이언트를 구성하였습니다. 
