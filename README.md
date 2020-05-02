@@ -776,13 +776,11 @@ void Socket::Run_socket() {
 	listen(hListen, SOMAXCONN);
 	//연결을 수신하는 상태로 소켓의 상태를 변경한다. 즉, 소켓을 접속대기 상태로 만들어준다.
 	//SOMAXCONN은 한꺼번에 요청 가능한 최대 접속승인 수를 의미.
-
 	//데이터 통신에 사용할 변수 
 	SOCKET hClient;
 	SOCKADDR_IN tClntAddr;
 	int iClntSize;
 	char buf[PACKET_SIZE];
-
 	while (true) {
 		tClntAddr = {};
 		iClntSize = sizeof(tClntAddr);
@@ -851,28 +849,28 @@ void Socket::Run_socket() {
 			cout << "확인" << endl;
 			all.search();
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
+			
 		}
 		else if (strcmp(cBuffer, "EndROI") == 0) {
 			strcpy_s(cMsg, "EndROI");
 			cout << "endROI실행" << endl;
 			all.End_RoiImg(socc.print_secimg());
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
+			
 		}
 		else if (strcmp(cBuffer, "His") == 0) {
 			strcpy_s(cMsg, "His");
 			cout << "histogram 실행" << endl;
 			all.Histogram();
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
+			
 		}
 		else if (strcmp(cBuffer, "load") == 0) {
 			strcpy_s(cMsg, "load");
 			cout << "이미지 불러오기 실행" << endl;
 			all.Imread(socc.print_firimg(), socc.print_secimg());
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
+			
 		}
 		else if (strcmp(cBuffer, "break") == 0) {
 			strcpy_s(cMsg, "break");
@@ -882,7 +880,7 @@ void Socket::Run_socket() {
 		}
 		else {
 			cout << "잘못된 접근" << endl;
-			continue;
+			
 
 		}
 
