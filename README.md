@@ -626,8 +626,7 @@ int datReceive(SOCKET s, char* buf, int len, int flags) {
 	//더 받을 수 있는 데이터 길이를 반환 (데이터를 한번이라도 받았으면 0이 아닌 수를 반환하게 됨.
 	return (len - left);
 }
-```
-```cpp
+
 void Socket::insertimg(string img1) {
 	if (img1.find("start") != string::npos) {
 		//start라는 문자가 있을 경우
@@ -642,9 +641,18 @@ void Socket::insertimg(string img1) {
 	}
 
 }
+string Socket::print_firimg() {
+	return firstimg;
+}
+string Socket::print_secimg() {
+	return secondimg;
+}
+string Socket::print_noimg() {
+	return noimg;
+}
 ```
 ```cpp
-//Socket.cpp
+//Socket.cpp 중 void Socket::Run_socket()에서 while문에 추가된 if문입니다.
 if (strcmp(cBuffer, "Down") == 0) {
 			cout << "클라이언트 접속 : IP=" << inet_ntoa(tClntAddr.sin_addr) << ", PORT=" << ntohs(tClntAddr.sin_port) << endl;
 			//파일 이름 받기
@@ -689,7 +697,7 @@ if (strcmp(cBuffer, "Down") == 0) {
 			else { cout << "파일 실패" << endl; }
 		}
 ```
-이렇게 추가를 해주었으며 Socket.cpp의 전체 코드입니다.
+이미지 파일을 받기 위해서 추가된 부분입니다. 아래는 추가 후에 Socket.cpp의 전체 코드 입니다.   
 ```cpp
 #include <iostream>
 #include <WinSock2.h>
@@ -737,6 +745,15 @@ void Socket::insertimg(string img1) {
 		noimg = img1;
 	}
 
+}
+string Socket::print_firimg() {
+	return firstimg;
+}
+string Socket::print_secimg() {
+	return secondimg;
+}
+string Socket::print_noimg() {
+	return noimg;
 }
 void Socket::Run_socket() {
 
@@ -877,13 +894,5 @@ void Socket::Run_socket() {
 
 	WSACleanup();//소켓을 활용하는것은 startup과 cleanup 사이에 작성. 생성자와 소멸자 같은 개념
 }
-string Socket::print_firimg() {
-	return firstimg;
-}
-string Socket::print_secimg() {
-	return secondimg;
-}
-string Socket::print_noimg() {
-	return noimg;
-}
+
 ```
