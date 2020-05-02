@@ -453,28 +453,24 @@ void Socket::Run_socket() {
 			cout << "확인" << endl;
 			all.search();
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
 		}
 		else if (strcmp(cBuffer, "EndROI") == 0) {
 			strcpy_s(cMsg, "EndROI");
 			cout << "endROI실행" << endl;
 			all.End_RoiImg(img_str2);
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
 		}
 		else if (strcmp(cBuffer, "His") == 0) {
 			strcpy_s(cMsg, "His");
 			cout << "histogram 실행" << endl;
 			all.Histogram();
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
 		}
 		else if (strcmp(cBuffer, "load") == 0) {
 			strcpy_s(cMsg, "load");
 			cout << "이미지 불러오기 실행" << endl;
 			all.Imread(img_str, img_str2);
 			send(hClient, cMsg, strlen(cMsg), 0);
-			continue;
 		}
 		else if (strcmp(cBuffer, "break") == 0) {
 			strcpy_s(cMsg, "break");
@@ -484,7 +480,6 @@ void Socket::Run_socket() {
 		}
 		else {
 			cout << "잘못된 접근" << endl;
-			continue;
 
 		}
 		
