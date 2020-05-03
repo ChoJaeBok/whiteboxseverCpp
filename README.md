@@ -651,7 +651,7 @@ string Socket::print_noimg() {
 ```cpp
 //Socket.cpp 중 void Socket::Run_socket()에서 while문에 추가된 if문입니다.
 if (strcmp(cBuffer, "Down") == 0) {
-			cout << "클라이언트 접속 : IP=" << inet_ntoa(tClntAddr.sin_addr) << ", PORT=" << ntohs(tClntAddr.sin_port) << endl;
+			cout << "클라이언트 접속 << endl;
 			//파일 이름 받기
 			char filename[256];
 			ZeroMemory(filename, 256);
@@ -660,9 +660,14 @@ if (strcmp(cBuffer, "Down") == 0) {
 			socc.insertimg(filename);
 			if (socc.print_noimg() != "") {
 				//이미지 보내올 때 잘못된 이미지는 사용하지 않도록 하기위해 구현한 부분입니다. 
-				cout << "잘못된 이미지 파일입니다. 처음이미지는 start를 붙여주시고 비교할 이미지는 End를 붙여주세요!" << endl;
+				strcpy_s(cMsg, "Again includ start and end ");
+				send(hClient, cMsg, strlen(cMsg), 0);
 				socc.insertimg("");
 				continue;
+			}
+			else {
+				strcpy_s(cMsg, "success ");
+				send(hClient, cMsg, strlen(cMsg), 0);
 			}
 			//파일 크기 받기
 			int totalbytes;
@@ -795,7 +800,7 @@ void Socket::Run_socket() {
 		char cMsg[] = "StartROI  ";
 
 		if (strcmp(cBuffer, "Down") == 0) {
-			cout << "클라이언트 접속 : IP=" << inet_ntoa(tClntAddr.sin_addr) << ", PORT=" << ntohs(tClntAddr.sin_port) << endl;
+			cout << "클라이언트 접속 << endl;
 			//파일 이름 받기
 			char filename[256];
 			ZeroMemory(filename, 256);
@@ -804,9 +809,14 @@ void Socket::Run_socket() {
 			socc.insertimg(filename);
 			if (socc.print_noimg() != "") {
 				//이미지 보내올 때 잘못된 이미지는 사용하지 않도록 하기위해 구현한 부분입니다. 
-				cout << "잘못된 이미지 파일입니다. 처음이미지는 start를 붙여주시고 비교할 이미지는 End를 붙여주세요!" << endl;
+				strcpy_s(cMsg, "Again includ start and end ");
+				send(hClient, cMsg, strlen(cMsg), 0);
 				socc.insertimg("");
 				continue;
+			}
+			else {
+				strcpy_s(cMsg, "success ");
+				send(hClient, cMsg, strlen(cMsg), 0);
 			}
 			//파일 크기 받기
 			int totalbytes;
@@ -938,6 +948,9 @@ void Socket::Run_socket() {
 					cout << "총" << numtotal << "바이트 파일전송을 완료" << endl;
 					break;
 				}
+				
+				recv(hSocket, cBuffer, PACKET_SIZE, 0);
+				cout << "Recv Msg:" << cBuffer << endl;
 			}
 ```
 여기서 이미지 파일 명인 myfile은 따로 입력 받아서 하는 것이 아닌 if문으로 3개의 경우로 만들어서 start가 포함된 것과 End가 포함된 것 그리고
