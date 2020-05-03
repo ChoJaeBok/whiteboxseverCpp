@@ -2,6 +2,7 @@
 ![시스템구성도(수정2)](https://user-images.githubusercontent.com/60215726/80072142-ca073700-8580-11ea-8667-8c79b89a1a78.png) 
  졸업작품을 주제로 한 whitebox(https://github.com/ChoJaeBok/whiteboxproject) 에서 서버와 영상처리를 담당하는 부분에 대한 것을 python 버전에서 C++버전으로 다시 만든 것입니다. 또한 python을 진행하였을 당시에는 라즈베리파이 b3에서 진행하였지만 C++버전은 컴퓨터(윈도우)환경에서 진행하였습니다. 또한 클라이언트는 안드로이드가 아닌 같은 C++로 제작하여 진행하였습니다.    
 기존에 만들었던 작품에서 진행하는 순서는 비슷하나 부족했던 부분들은 추가할 예정입니다.   
+(클라이언트에서 서버로 이미지 파일을 전송한 다음 서버에서는 그 이미지 파일을 이용하는 방식을 추가하였습니다.)
  
 
 ### 1.코드
@@ -646,6 +647,7 @@ string Socket::print_noimg() {
 	return noimg;
 }
 ```
+처음에 지정했던 PACKET_SIZE는 소켓통신만 진행했을 때는 1024로 하였지만 이미지 파일 보낼 때는 더 크게 4096으로 지정해주고 진행하였습니다. 
 ```cpp
 //Socket.cpp 중 void Socket::Run_socket()에서 while문에 추가된 if문입니다.
 if (strcmp(cBuffer, "Down") == 0) {
@@ -889,3 +891,55 @@ void Socket::Run_socket() {
 }
 
 ```
+#### 2) 클라이언트 
+클라이언트에서 추가된 이미지(파일) 전송하는 코드입니다.
+```cpp
+			strcpy_s(cMsg, "Down");
+			send(hSocket, cMsg, strlen(cMsg), 0);
+			//파일 열기
+			//보낼 파일 설정
+			char myFile[256] = "startimage.jpg";
+			FILE *fp = fopen(myFile, "rb");
+
+			//파일 이름 변수
+			char filename[256];
+			ZeroMemory(filename, 256);
+			sprintf(filename, myFile);
+
+			//소켓으로 파일 이름을 전송
+			send(hSocket, filename, 256, 0);
+
+			//파일크기 얻기
+			fseek(fp, 0, SEEK_END);
+			int totalbytes = ftell(fp);
+
+			//파일 크기 소켓으로 보내기
+			send(hSocket, (char *)&totalbytes, sizeof(totalbytes), 0);
+			//파일 데이터 전송에 사용할 변수
+			char buf[PACKET_SIZE];
+			int numread;
+			int numtotal = 0;
+
+			//파일 포인터를 제일 앞으로 이동
+			rewind(fp);
+			//반복적으로 파일 데이터 보내기
+			while (1) {
+				//파일의 내용을 버퍼에 담음
+				numread = fread(buf, 1, PACKET_SIZE, fp);
+
+				//파일 데이터가 조금이라도 남은 경우
+				if (numread > 0) {
+					send(hSocket, buf, numread, 0);
+					numtotal += numread;
+				}
+
+				//파일을 모두 전송한 경우
+				else if (numread == 0 && numtotal == totalbytes) {
+					cout << "총" << numtotal << "바이트 파일전송을 완료" << endl;
+					break;
+				}
+			}
+```
+여기서 이미지 파일 명인 myfile은 따로 입력 받아서 하는 것이 아닌 if문으로 3개의 경우로 만들어서 start가 포함된 것과 End가 포함된 것 그리고
+분류가 안되는 이름을 넣어서 시도를 했습니다.    
+C++로 진행하는 소켓통신 부분은 ([참조](https://kevinthegrey.tistory.com/26) 여기에서 많은 도움을 받았습니다. 
