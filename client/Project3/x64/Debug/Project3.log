@@ -1,0 +1,13 @@
+﻿  client.cpp
+c:\users\whwpq\source\repos\project3\client.cpp(47): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(77): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(97): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(127): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(146): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(176): warning C4267: '=': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(195): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(203): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(209): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(215): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\whwpq\source\repos\project3\client.cpp(221): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Project3.vcxproj -> C:\Users\whwpq\source\repos\Project3\x64\Debug\Project3.exe
