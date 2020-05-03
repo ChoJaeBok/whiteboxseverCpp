@@ -9,9 +9,9 @@
 #pragma comment(lib, "ws2_32")
 #define PORT 8888
 #define PACKET_SIZE 4096
-#define SERVER_IP "172.30.1.37"
+#define SERVER_IP "ip."
 using namespace std;
-static int i = 0;
+
 int main()
 {
 	int select_i = 0;
