@@ -652,55 +652,56 @@ string Socket::print_noimg() {
 //Socket.cpp 중 void Socket::Run_socket()에서 while문에 추가된 if문입니다.
 void Socket::Run_socket() {
 //...
-	if (strcmp(cBuffer, "Down") == 0) {
-		cout << "클라이언트 접속 << endl;
-		//파일 이름 받기
-		char filename[256];
-		ZeroMemory(filename, 256);
-		datReceive(hClient, filename, 256, 0);
-		cout << "받을 파일 이름 : " << filename << endl;
-		socc.insertimg(filename);
-		if (socc.print_noimg() != "") {
-			//이미지 보내올 때 잘못된 이미지는 사용하지 않도록 하기위해 구현한 부분입니다. 
-			strcpy_s(cMsg, "Again includ start and end ");
-			send(hClient, cMsg, strlen(cMsg), 0);
-			socc.insertimg("");
-			continue;
-		}
-		else {
-			strcpy_s(cMsg, "success ");
-			send(hClient, cMsg, strlen(cMsg), 0);
-		}
-		//파일 크기 받기
-		int totalbytes;
-		datReceive(hClient, (char *)&totalbytes, sizeof(totalbytes), 0);
-		//받을 파일 크기 출력
-		cout << "받을 파일 크기 :" << totalbytes << endl;
-		//파일 열기
-		FILE *fp = fopen(filename, "wb");
-		//파일 데이터 받기
-		int numtotal = 0;
-		while (1) {
-			retval = datReceive(hClient, buf, PACKET_SIZE, 0);
-			//더 받을 데이터가 없을때
-			if (retval == 0) {
-				break;
+		if (strcmp(cBuffer, "Down") == 0) {
+			cout << "클라이언트 접속" << endl;
+			//파일 이름 받기
+			char filename[256];
+			ZeroMemory(filename, 256);
+			datReceive(hClient, filename, 256, 0);
+			cout << "받을 파일 이름 : " << filename << endl;
+			socc.insertimg(filename);
+			if (socc.print_noimg() != "") {
+				//이미지 보내올 때 잘못된 이미지는 사용하지 않도록 하기위해 구현한 부분입니다. 
+				strcpy_s(cMsg, "Again includ start and end ");
+				send(hClient, cMsg, strlen(cMsg), 0);
+				socc.insertimg("");
+				continue;
 			}
 			else {
-				fwrite(buf, 1, retval, fp);
-				//받을데이터 크기만큼 변수에 더해줌
-				numtotal += retval;
+				strcpy_s(cMsg, "success ");
+				send(hClient, cMsg, strlen(cMsg), 0);
 			}
-		}
-		fclose(fp);
+			//파일 크기 받기
+			int totalbytes;
+			datReceive(hClient, (char *)&totalbytes, sizeof(totalbytes), 0);
+			//받을 파일 크기 출력
+			cout << "받을 파일 크기 :" << totalbytes << endl;
+			//파일 열기
+			FILE *fp = fopen(filename, "wb");
+			//파일 데이터 받기
+			int numtotal = 0;
+			while (1) {
+				retval = datReceive(hClient, buf, PACKET_SIZE, 0);
+				//더 받을 데이터가 없을때
+				if (retval == 0) {
+					break;
+				}
+				else {
+					fwrite(buf, 1, retval, fp);
+					//받을데이터 크기만큼 변수에 더해줌
+					numtotal += retval;
+				}
+			}
+			fclose(fp);
 
-		//전송 결과
-		if (numtotal == totalbytes) {
-			cout << "파일 성공" << endl;
+			//전송 결과
+			if (numtotal == totalbytes) {
+				cout << "파일 성공" << endl;
+
+			}
+			else { cout << "파일 실패" << endl; }
+
 		}
-		else { cout << "파일 실패" << endl;
-		}
-	}	
 }
 ```
 이미지 파일을 받기 위해서 추가된 부분입니다. 아래는 추가 후에 Socket.cpp의 전체 코드 입니다.   
@@ -804,7 +805,7 @@ void Socket::Run_socket() {
 		char cMsg[] = "StartROI  ";
 
 		if (strcmp(cBuffer, "Down") == 0) {
-			cout << "클라이언트 접속 << endl;
+			cout << "클라이언트 접속" << endl;
 			//파일 이름 받기
 			char filename[256];
 			ZeroMemory(filename, 256);
