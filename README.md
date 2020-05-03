@@ -942,4 +942,4 @@ void Socket::Run_socket() {
 ```
 여기서 이미지 파일 명인 myfile은 따로 입력 받아서 하는 것이 아닌 if문으로 3개의 경우로 만들어서 start가 포함된 것과 End가 포함된 것 그리고
 분류가 안되는 이름을 넣어서 시도를 했습니다.    
-C++로 진행하는 소켓통신 부분은 ([참조](https://kevinthegrey.tistory.com/26) 여기에서 많은 도움을 받았습니다. 
+C++로 진행하는 것에서  인터넷에서 많은 도움을 받았으며 [소켓통신](https://kevinthegrey.tistory.com/26)과 [파일 소켓통신](http://blog.naver.com/PostView.nhn?blogId=war2i7i7&logNo=220791180984&parentCategoryNo=&categoryNo=6&viewDate=&isShowPopularPosts=false&from=postView) 두 사이트에서 큰 도움을 받았습니다. 
