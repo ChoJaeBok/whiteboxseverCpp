@@ -8,20 +8,13 @@
 #include "opencv2/imgproc/imgproc.hpp"
 using namespace std;
 using namespace cv;
-//string img_str("startimage.jpg");// 처음 이미지
-//string img_str2("Endimage.jpg");// 마지막 이미지 
 bool mouse_is_pressing = false;
 int start_x = -1, start_y = -1;
 Mat img_color;
 static int i = 0;
-int startx[10], starty[10], endx[10], endy[10];
+int startx[15], starty[15], endx[15], endy[15];
 Allopencv allopencv;
 
-void Allopencv::Run() {
-	Socket soc;
-	cout << "socket 통신 실행" << endl;
-	soc.Run_socket();
-}
 void Allopencv::Imread(string img_str, string img_str2) {
 
 	//cv::imread(_);
@@ -44,7 +37,7 @@ void Allopencv::Imread(string img_str, string img_str2) {
 	waitKey(0);
 	destroyAllWindows();
 }
-
+//mouse_claaback으로 컴퓨터(윈도우)환경에서 진행하여 드래그를 방식으로 진행하였습니다.
 void mouse_callback(int event, int x, int y, int flags, void *userdata) {
 	Mat img_result = img_color.clone();
 
@@ -55,7 +48,7 @@ void mouse_callback(int event, int x, int y, int flags, void *userdata) {
 		start_y = y;
 		startx[i] = (int)x;
 		starty[i] = (int)y;
-		cout << "처음2," << start_x << "," << start_y << "," << x << "," << y << endl;
+		cout << "처음2" << start_x << "," << start_y << "," << x << "," << y << endl;
 		//circle(img_result, Point(x, y), 10, Scalar(0, 255, 0), -1);
 		//imshow("img_color", img_result);
 	}
@@ -79,7 +72,9 @@ void mouse_callback(int event, int x, int y, int flags, void *userdata) {
 		imshow("img_color", img_result);
 		imshow("img_roi", img_roi);
 		imwrite("startroi" + to_string(i) + ".jpg", img_roi);//roi 해서 저장하는 부분.
-
+		//이미지 ROI를 한 상태로 저장하는 방식입니다.  
+		//이 방식을 택한 이유는 저장한 상태에서 histogram을 할 때
+		//저장된 이미지를 순서대로 불러와 비교를 하기 위해 선택하였습니다. 
 	}
 
 }
@@ -88,7 +83,7 @@ void Allopencv::set_i_num(int count) {
 	i_num = count;
 }
 void Allopencv::location(int x1, int y1, int x2, int y2, int count) {
-
+	//좌표를 저장하기 위한 함수.
 	startx[count] = x1;
 	starty[count] = y1;
 	endx[count] = x2;
@@ -99,6 +94,7 @@ void search_2() {
 	for (int d = 0; d < i; d++) {
 		cout << d << "번째(for):" << startx[d] << "," << starty[d] << "," << endx[d] << "," << endy[d] << endl;
 		allopencv.location(startx[d], starty[d], endx[d], endy[d], d);
+		//첫 이미지에서 좌표를 구했을 때 같은 좌표로 EndROI때 사용하기 위해 저장하는 것입니다. 
 	}
 }
 
@@ -106,6 +102,8 @@ void Allopencv::RoiImg(string img_str) {
 	img_color = imread(img_str, IMREAD_COLOR);
 	imshow("img_color", img_color);
 	setMouseCallback("img_color", mouse_callback);
+	//setMouseCallback 함수는 위의 mousse_callback함수를 이용해 드래그를 하는 역할로
+	//좌표를 구한 뒤 ROI를 한 후 이미지를 저장하게 하였습니다. 
 	waitKey(0);
 	destroyAllWindows();
 
@@ -114,6 +112,7 @@ void Allopencv::search() {
 	search_2();
 	for (int d = 0; d < i; d++) {
 		cout << d << "번째:" << allopencv.print_area_startx(d) << "," << allopencv.print_area_starty(d) << "," << allopencv.print_area_endx(d) << "," << allopencv.print_area_endy(d) << endl;
+		//좌표가 이상없이 저장되었는지 확인하기 위해 사용하였습니다. 
 	}
 }
 
@@ -134,7 +133,10 @@ int Allopencv::print_i_num() {
 	return i_num;
 }
 
+
 void Allopencv::End_RoiImg(string img_str) {
+	//End_Roi로 저장해놓은 좌표들을 토대로 마지막 이미지에서 이용해 
+	//ROI를 하여 다시 저장하는 방식입니다. 
 	Mat img_end = imread(img_str);
 	namedWindow("endimage");
 	imshow("endimage", img_end);
@@ -152,6 +154,8 @@ void Allopencv::End_RoiImg(string img_str) {
 void Allopencv::Histogram() {
 	Mat srcImage[2];
 	for (int count = 0; count < i; count++) {
+		//for문을 이용한 것은 좌표매핑한 횟수만큼 자동으로 실행하고 
+		//비교를 하기 위해 사용하였습니다. 
 		srcImage[0] = imread("startroi" + to_string(count + 1) + ".jpg", IMREAD_GRAYSCALE);
 		srcImage[1] = imread("Endroi" + to_string(count + 1) + ".jpg", IMREAD_GRAYSCALE);
 
@@ -169,11 +173,8 @@ void Allopencv::Histogram() {
 		else if (check_dC <= 7.0) {
 			cout << "detech" << check_dC << endl;
 		}
-		//cout << "Correl distance(큰값이 유사) = " << dCorrel << endl;
-		//cout << "Correl distance(큰값이 유사) = " << check_dC << endl;
+		
 	}
-	//imshow("srcimage", srcImage[0]);
-	//imshow("srcimage2", srcImage[1]);
 	waitKey(0);
 	destroyAllWindows();
 
